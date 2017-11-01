@@ -8,23 +8,27 @@ pipeline {
       }
     }
     stage('SonarQube Quality Check') {
-      withSonarQubeEnv('SonarQube'){
-        sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.3.0.603:sonar ' + 
-          '-f all/pom.xml ' +
-          '-Dsonar.projectKey=test ' +
-          '-Dsonar.login=admin ' +
-          '-Dsonar.password=admin ' +
-          '-Dsonar.language=php ' +
-          '-Dsonar.sources=. ' +
-          '-Dsonar.tests=. ' 
+      steps {
+        withSonarQubeEnv('SonarQube'){
+          sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.3.0.603:sonar ' + 
+            '-f all/pom.xml ' +
+            '-Dsonar.projectKey=test ' +
+            '-Dsonar.login=admin ' +
+            '-Dsonar.password=admin ' +
+            '-Dsonar.language=php ' +
+            '-Dsonar.sources=. ' +
+            '-Dsonar.tests=. ' 
+        }
       }
     }
     stage("SonarQube Quality Gate") { 
-        timeout(time: 1, unit: 'HOURS') { 
-           def qg = waitForQualityGate() 
-           if (qg.status != 'OK') {
-             error "Pipeline aborted due to quality gate failure: ${qg.status}"
-           }
+        steps {
+          timeout(time: 1, unit: 'HOURS') { 
+             def qg = waitForQualityGate() 
+             if (qg.status != 'OK') {
+               error "Pipeline aborted due to quality gate failure: ${qg.status}"
+             }
+          }
         }
     }
   }
