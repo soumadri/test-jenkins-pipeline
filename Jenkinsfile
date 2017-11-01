@@ -10,7 +10,7 @@ pipeline {
     stage('SonarQube Quality Check') {
       steps {
         withSonarQubeEnv('SonarQube'){
-          sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.3.0.603:sonar ' + 
+          sh 'mvn sonar:sonar ' + 
             '-f all/pom.xml ' +
             '-Dsonar.projectKey=test ' +
             '-Dsonar.login=admin ' +
