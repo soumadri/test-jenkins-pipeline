@@ -7,5 +7,10 @@ pipeline {
         sh 'echo "Check JSLint"'
       }
     }
+    stage('Check code quality') {
+      steps {
+        waitForQualityGate()
+      }
+    }
   }
 }
